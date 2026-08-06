@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日記 | ピンの音</title>
+<meta name="description" content="ボウリング学習ノート「ピンの音」の日記。練習や気づきを日付順に記録しています。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14213D;
+    --navy-deep:#0D1730;
+    --lane:#3667E0;
+    --lane-light:#6E93F2;
+    --pin:#FF4FA0;
+    --pin-soft:#FFD1E8;
+    --cream:#FFF6EA;
+    --gold:#F2A93B;
+    --ink:#14213D;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'M PLUS Rounded 1c', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.8;
+  }
+  a{color:inherit; text-decoration:none;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(20,33,61,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:3px solid var(--pin);
+  }
+  .nav-wrap{
+    max-width:1120px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+  }
+  .logo{
+    color:var(--cream);
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:.04em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo-pin{
+    width:20px;height:26px;
+    background:var(--cream);
+    border-radius:60% 60% 50% 50%/70% 70% 40% 40%;
+    position:relative;
+    flex-shrink:0;
+  }
+  .logo-pin::after{
+    content:"";
+    position:absolute; top:38%; left:50%;
+    width:60%; height:3px;
+    background:var(--pin);
+    transform:translateX(-50%);
+  }
+  nav ul{
+    display:flex; gap:28px; list-style:none;
+  }
+  nav a{
+    color:var(--pin-soft);
+    font-weight:500;
+    font-size:.92rem;
+    position:relative;
+    padding-bottom:4px;
+  }
+  nav a.current{ color:var(--cream); }
+  nav a::after{
+    content:"";
+    position:absolute; left:0; bottom:0;
+    width:0; height:2px;
+    background:linear-gradient(90deg,var(--lane-light),var(--pin));
+    transition:width .25s ease;
+  }
+  nav a:hover::after, nav a.current::after{ width:100%; }
+
+  /* ---------- Page header ---------- */
+  .page-hero{
+    position:relative;
+    background:var(--navy-deep);
+    color:var(--cream);
+    padding:64px 24px 44px;
+    overflow:hidden;
+  }
+  .carpet-pattern{
+    position:absolute; inset:0;
+    opacity:.14;
+    pointer-events:none;
+  }
+  .page-hero-inner{
+    position:relative; z-index:2;
+    max-width:800px; margin:0 auto;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    letter-spacing:.16em;
+    color:var(--gold);
+    border:1px solid rgba(242,169,60,.5);
+    padding:6px 14px;
+    border-radius:100px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{ content:"●"; color:var(--pin); font-size:.6rem; }
+  h1.page-title{
+    font-size:clamp(2rem, 5vw, 2.8rem);
+    font-weight:800;
+    margin-bottom:12px;
+  }
+  .page-sub{
+    color:rgba(255,246,234,.75);
+    font-size:.98rem;
+    max-width:520px;
+  }
+
+  /* ---------- Diary list ---------- */
+  main{ padding:56px 24px 100px; }
+  .diary-wrap{ max-width:800px; margin:0 auto; }
+
+  .month-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    color:var(--lane);
+    margin:36px 0 14px;
+  }
+  .month-label:first-child{ margin-top:0; }
+
+  .diary-list{
+    display:flex; flex-direction:column;
+    border-top:1px solid #e6ddce;
+  }
+  .diary-entry{
+    padding:26px 4px;
+    border-bottom:1px solid #e6ddce;
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:24px;
+  }
+  .diary-date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    color:var(--pin);
+    padding-top:2px;
+  }
+  .diary-date .weekday{
+    display:block;
+    color:#9aa3ba;
+    font-size:.72rem;
+    margin-top:4px;
+  }
+  .diary-body p{
+    color:#3f4a63;
+    font-size:.96rem;
+  }
+  .diary-body p + p{ margin-top:10px; }
+
+  .diary-empty{
+    padding:40px 4px;
+    color:#8892a8;
+    font-size:.92rem;
+    border-bottom:1px solid #e6ddce;
+  }
+
+  @media (max-width: 560px){
+    .diary-entry{ grid-template-columns:1fr; gap:6px; }
+    .diary-date{ display:flex; align-items:baseline; gap:10px; }
+    .diary-date .weekday{ margin-top:0; }
+    nav ul{ display:none; }
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--navy-deep);
+    color:rgba(255,246,234,.6);
+    padding:48px 24px 32px;
+  }
+  .footer-inner{
+    max-width:1120px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:20px;
+  }
+  .footer-nav{ display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+  .footer-nav a{ font-size:.85rem; color:rgba(255,246,234,.7); }
+  .footer-nav a:hover{ color:var(--pin-soft); }
+  .footer-small{ font-family:'JetBrains Mono', monospace; font-size:.72rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-pin"></span>ピンの音</a>
+    <nav>
+      <ul>
+        <li><a href="index.html">TOP</a></li>
+        <li><a href="blog.html" class="current">日記</a></li>
+        <li><a href="gallery.html">ギャラリー</a></li>
+        <li><a href="about.html">このサイトについて</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <svg class="carpet-pattern" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="carpet" width="80" height="80" patternUnits="userSpaceOnUse">
+        <path d="M0 40 Q20 0 40 40 T80 40" stroke="#FF4FA0" stroke-width="3" fill="none"/>
+        <path d="M0 60 Q20 20 40 60 T80 60" stroke="#6E93F2" stroke-width="3" fill="none"/>
+        <circle cx="10" cy="10" r="3" fill="#F2A93B"/>
+        <circle cx="60" cy="70" r="3" fill="#FF4FA0"/>
+      </pattern>
+    </defs>
+    <rect width="400" height="400" fill="url(#carpet)"/>
+  </svg>
+  <div class="page-hero-inner">
+    <span class="eyebrow">DIARY</span>
+    <h1 class="page-title">日記</h1>
+    <p class="page-sub">練習の記録や、調べていて気づいたことを日付順に残していきます。</p>
+  </div>
+</section>
+
+<main>
+  <div class="diary-wrap">
+
+    <!--
+      1件追加する場合はこの diary-entry ブロックをコピーしてください。
+      <div class="diary-entry">
+        <div class="diary-date mono">2026.08.05<span class="weekday">WED</span></div>
+        <div class="diary-body">
+          <p>ここに日記本文を書きます。</p>
+        </div>
+      </div>
+    -->
+
+    <div class="diary-list">
+      <p class="diary-empty">まだ日記はありません。最初の投稿をお楽しみに。</p>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <ul class="footer-nav">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="blog.html">日記</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <span class="footer-small mono">© ピンの音 — Bowling Study Notes</span>
+  </div>
+</footer>
+
+</body>
+</html>
