@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ピンの音 | ボウリング学習ノート</title>
+<meta name="description" content="ボウリングのルール・スコア・フォーム・レーンの知識をまとめる個人学習サイト「ピンの音」。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14213D;
+    --navy-deep:#0D1730;
+    --lane:#3667E0;
+    --lane-light:#6E93F2;
+    --pin:#FF4FA0;
+    --pin-soft:#FFD1E8;
+    --cream:#FFF6EA;
+    --gold:#F2A93B;
+    --ink:#14213D;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'M PLUS Rounded 1c', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.8;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(20,33,61,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:3px solid var(--pin);
+  }
+  .nav-wrap{
+    max-width:1120px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+  }
+  .logo{
+    color:var(--cream);
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:.04em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo-pin{
+    width:20px;height:26px;
+    background:var(--cream);
+    border-radius:60% 60% 50% 50%/70% 70% 40% 40%;
+    position:relative;
+    flex-shrink:0;
+  }
+  .logo-pin::after{
+    content:"";
+    position:absolute; top:38%; left:50%;
+    width:60%; height:3px;
+    background:var(--pin);
+    transform:translateX(-50%);
+  }
+  nav ul{
+    display:flex; gap:28px; list-style:none;
+  }
+  nav a{
+    color:var(--pin-soft);
+    font-weight:500;
+    font-size:.92rem;
+    position:relative;
+    padding-bottom:4px;
+  }
+  nav a.current{ color:var(--cream); }
+  nav a::after{
+    content:"";
+    position:absolute; left:0; bottom:0;
+    width:0; height:2px;
+    background:linear-gradient(90deg,var(--lane-light),var(--pin));
+    transition:width .25s ease;
+  }
+  nav a:hover::after, nav a.current::after{ width:100%; }
+  .nav-toggle{ display:none; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,79,160,.18), transparent 60%),
+      var(--navy-deep);
+    padding:88px 24px 40px;
+    overflow:hidden;
+    color:var(--cream);
+  }
+  .carpet-pattern{
+    position:absolute; inset:0;
+    opacity:.16;
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative; z-index:2;
+    max-width:1120px; margin:0 auto;
+    text-align:center;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    letter-spacing:.16em;
+    color:var(--gold);
+    border:1px solid rgba(242,169,60,.5);
+    padding:6px 14px;
+    border-radius:100px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{ content:"●"; color:var(--pin); font-size:.6rem; }
+  h1.hero-title{
+    font-size:clamp(2.6rem, 7vw, 4.6rem);
+    font-weight:800;
+    line-height:1.15;
+    background:linear-gradient(100deg, var(--cream) 30%, var(--pin-soft) 60%, var(--lane-light) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:18px;
+  }
+  .hero-sub{
+    max-width:560px; margin:0 auto 34px;
+    color:rgba(255,246,234,.82);
+    font-size:1.05rem;
+  }
+  .hero-cta{
+    display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    margin-bottom:56px;
+  }
+  .btn{
+    padding:14px 28px;
+    border-radius:100px;
+    font-weight:700;
+    font-size:.95rem;
+    border:2px solid transparent;
+    cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{
+    background:linear-gradient(120deg, var(--pin), #FF7EBB);
+    color:var(--navy-deep);
+    box-shadow:0 10px 24px -8px rgba(255,79,160,.6);
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--cream);
+    border-color:rgba(255,246,234,.35);
+  }
+  .btn-ghost:hover{ border-color:var(--lane-light); }
+
+  /* ---------- Lane illustration ---------- */
+  .lane-wrap{
+    position:relative;
+    max-width:640px; margin:0 auto;
+    perspective:600px;
+  }
+  .lane-svg{ width:100%; height:auto; display:block; }
+  .foul-line-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.68rem;
+    fill:rgba(255,246,234,.55);
+    letter-spacing:.1em;
+  }
+
+  /* ---------- Section shells ---------- */
+  section{ padding:76px 24px; }
+  .section-inner{ max-width:1120px; margin:0 auto; }
+  .section-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:20px; margin-bottom:40px; flex-wrap:wrap;
+  }
+  .section-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.75rem;
+    letter-spacing:.14em;
+    color:var(--lane);
+    margin-bottom:8px;
+    display:block;
+  }
+  .section-title{
+    font-size:clamp(1.6rem, 3.4vw, 2.3rem);
+    font-weight:800;
+    color:var(--navy);
+  }
+  .section-desc{
+    max-width:440px;
+    color:#5a6584;
+    font-size:.95rem;
+  }
+
+  /* ---------- Intro strip ---------- */
+  .intro{ background:var(--cream); }
+  .intro-grid{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center;
+  }
+  .intro-text p{ color:#4b5670; margin-bottom:14px; }
+  .intro-text strong{ color:var(--pin); }
+  .stat-card{
+    background:var(--navy);
+    border-radius:var(--radius);
+    padding:28px;
+    color:var(--cream);
+    position:relative;
+    overflow:hidden;
+  }
+  .stat-card::before{
+    content:"";
+    position:absolute; top:-40%; right:-20%;
+    width:220px; height:220px;
+    background:radial-gradient(circle, rgba(255,79,160,.35), transparent 70%);
+  }
+  .stat-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:14px 0; border-bottom:1px dashed rgba(255,246,234,.2);
+    position:relative; z-index:1;
+  }
+  .stat-row:last-child{ border-bottom:none; }
+  .stat-num{ font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--gold); font-size:1.1rem; }
+  .stat-name{ font-size:.9rem; color:var(--pin-soft); }
+
+  /* ---------- Topics = scoresheet frame cards ---------- */
+  .topics{ background:var(--navy); }
+  .topics .section-title, .topics .section-label{ color:var(--cream); }
+  .topics .section-label{ color:var(--pin-soft); }
+  .topics .section-desc{ color:rgba(255,246,234,.65); }
+
+  .frame-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+    gap:22px;
+  }
+  .frame-card{
+    background:var(--cream);
+    border-radius:14px;
+    padding:24px 22px 22px;
+    position:relative;
+    border:2px solid transparent;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .frame-card:hover{
+    border-color:var(--pin);
+    transform:translateY(-4px);
+  }
+  .frame-box{
+    position:absolute; top:0; right:18px;
+    width:44px; height:26px;
+    background:var(--navy);
+    border-radius:0 0 6px 6px;
+    display:flex; align-items:center; justify-content:center;
+    gap:4px;
+  }
+  .frame-box span{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    color:var(--pin-soft);
+  }
+  .frame-box .div{ width:1px; height:12px; background:rgba(255,246,234,.3); }
+  .frame-icon{
+    width:46px; height:46px;
+    border-radius:12px;
+    background:linear-gradient(135deg, var(--lane), var(--pin));
+    display:flex; align-items:center; justify-content:center;
+    color:var(--cream); font-size:1.3rem; font-weight:800;
+    margin-bottom:16px;
+  }
+  .frame-card h3{
+    font-size:1.05rem; font-weight:700; margin-bottom:8px; color:var(--navy);
+  }
+  .frame-card p{
+    font-size:.86rem; color:#5a6584;
+  }
+
+  /* ---------- Blog preview ---------- */
+  .blog-preview{ background:var(--cream); }
+  .diary-list{
+    display:flex; flex-direction:column; border-top:1px solid #e6ddce;
+  }
+  .diary-item{
+    display:flex; align-items:baseline; gap:24px;
+    padding:18px 4px;
+    border-bottom:1px solid #e6ddce;
+  }
+  .diary-date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem;
+    color:var(--pin);
+    flex-shrink:0;
+    width:96px;
+  }
+  .diary-text{ color:#3f4a63; font-size:.94rem; }
+  .diary-empty{
+    padding:32px 4px; color:#8892a8; font-size:.9rem;
+  }
+  .link-more{
+    display:inline-flex; align-items:center; gap:6px;
+    margin-top:22px; color:var(--lane); font-weight:700; font-size:.9rem;
+  }
+  .link-more span{ transition:transform .18s ease; }
+  .link-more:hover span{ transform:translateX(4px); }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--navy-deep);
+    color:rgba(255,246,234,.6);
+    padding:48px 24px 32px;
+  }
+  .footer-inner{
+    max-width:1120px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:20px;
+  }
+  .footer-nav{ display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+  .footer-nav a{ font-size:.85rem; color:rgba(255,246,234,.7); }
+  .footer-nav a:hover{ color:var(--pin-soft); }
+  .footer-small{ font-family:'JetBrains Mono', monospace; font-size:.72rem; }
+
+  @media (max-width: 760px){
+    nav ul{ display:none; }
+    .intro-grid{ grid-template-columns:1fr; }
+    .hero{ padding-top:64px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><span class="logo-pin"></span>ピンの音</a>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="current">TOP</a></li>
+        <li><a href="blog.html">日記</a></li>
+        <li><a href="gallery.html">ギャラリー</a></li>
+        <li><a href="about.html">このサイトについて</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="carpet-pattern" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="carpet" width="80" height="80" patternUnits="userSpaceOnUse">
+        <path d="M0 40 Q20 0 40 40 T80 40" stroke="#FF4FA0" stroke-width="3" fill="none"/>
+        <path d="M0 60 Q20 20 40 60 T80 60" stroke="#6E93F2" stroke-width="3" fill="none"/>
+        <circle cx="10" cy="10" r="3" fill="#F2A93B"/>
+        <circle cx="60" cy="70" r="3" fill="#FF4FA0"/>
+      </pattern>
+    </defs>
+    <rect width="400" height="400" fill="url(#carpet)"/>
+  </svg>
+
+  <div class="hero-inner">
+    <span class="eyebrow">STUDY NOTES / BOWLING</span>
+    <h1 class="hero-title">ピンの音</h1>
+    <p class="hero-sub">ルール、スコアの仕組み、フォームの基礎、レーンの読み方。<br>ボウリングを知るための学習ノートを少しずつ積み上げていきます。</p>
+    <div class="hero-cta">
+      <a href="#topics" class="btn btn-primary">学習コンテンツを見る</a>
+      <a href="blog.html" class="btn btn-ghost">日記を読む</a>
+    </div>
+
+    <div class="lane-wrap">
+      <svg class="lane-svg" viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg">
+        <!-- lane boards, perspective -->
+        <polygon points="220,370 420,370 360,40 280,40" fill="#1B2A54" stroke="rgba(255,246,234,0.12)" stroke-width="1"/>
+        <g stroke="rgba(255,246,234,0.16)" stroke-width="1">
+          <line x1="252" y1="370" x2="304" y2="40"/>
+          <line x1="284" y1="370" x2="316" y2="40"/>
+          <line x1="316" y1="370" x2="324" y2="40"/>
+          <line x1="348" y1="370" x2="332" y2="40"/>
+          <line x1="380" y1="370" x2="340" y2="40"/>
+        </g>
+        <!-- foul line -->
+        <line x1="220" y1="358" x2="420" y2="358" stroke="#FF4FA0" stroke-width="3"/>
+        <text x="320" y="378" text-anchor="middle" class="foul-line-label mono">FOUL LINE</text>
+        <!-- lane arrows -->
+        <g fill="#F2A93B" opacity="0.85">
+          <polygon points="300,300 306,290 294,290"/>
+          <polygon points="320,290 326,280 314,280"/>
+          <polygon points="340,300 346,290 334,290"/>
+        </g>
+        <!-- pins -->
+        <g fill="#FFF6EA">
+          <ellipse cx="320" cy="55" rx="6" ry="12"/>
+          <ellipse cx="308" cy="66" rx="5.5" ry="11"/>
+          <ellipse cx="332" cy="66" rx="5.5" ry="11"/>
+          <ellipse cx="300" cy="78" rx="5" ry="10"/>
+          <ellipse cx="320" cy="78" rx="5" ry="10"/>
+          <ellipse cx="340" cy="78" rx="5" ry="10"/>
+        </g>
+        <!-- ball rolling -->
+        <circle cx="320" cy="230" r="14" fill="#3667E0"/>
+        <circle cx="316" cy="226" r="1.6" fill="#0D1730"/>
+        <circle cx="324" cy="226" r="1.6" fill="#0D1730"/>
+        <circle cx="320" cy="232" r="1.6" fill="#0D1730"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="section-inner intro-grid">
+    <div class="intro-text">
+      <span class="section-label">ABOUT THIS NOTE</span>
+      <h2 class="section-title" style="margin-bottom:18px;">投げる前に、知っておきたいこと</h2>
+      <p>ボウリングは<strong>10フレーム</strong>という区切りの中で、確率・角度・力加減が絡み合うスポーツです。感覚だけで投げるのではなく、仕組みを理解してから体で覚えていきたいと思い、この学習ノートを始めました。</p>
+      <p>スコアの数え方、レーンコンディションの読み方、フォームのチェックポイントなど、調べたことや気づいたことを記録していきます。</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-row"><span class="stat-name">1ゲームのフレーム数</span><span class="stat-num">10</span></div>
+      <div class="stat-row"><span class="stat-name">満点スコア</span><span class="stat-num">300</span></div>
+      <div class="stat-row"><span class="stat-name">レーンの長さ（ファウルライン〜ヘッドピン）</span><span class="stat-num">18.29m</span></div>
+      <div class="stat-row"><span class="stat-name">ピンの本数</span><span class="stat-num">10</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="topics" id="topics">
+  <div class="section-inner">
+    <div class="section-head">
+      <div>
+        <span class="section-label">TOPICS</span>
+        <h2 class="section-title">学習コンテンツ</h2>
+      </div>
+      <p class="section-desc">スコアシートのフレーム欄に見立てて、テーマごとにまとめています。</p>
+    </div>
+
+    <div class="frame-grid">
+      <div class="frame-card">
+        <div class="frame-box"><span>7</span><span class="div"></span><span>/</span></div>
+        <div class="frame-icon">基</div>
+        <h3>ルールの基礎</h3>
+        <p>ストライク・スペア・オープンフレームなど、まず押さえておきたい基本ルール。</p>
+      </div>
+      <div class="frame-card">
+        <div class="frame-box"><span>9</span><span class="div"></span><span>X</span></div>
+        <div class="frame-icon">点</div>
+        <h3>スコアの数え方</h3>
+        <p>ボーナス加算の仕組みや10フレーム目の特殊ルールを整理。</p>
+      </div>
+      <div class="frame-card">
+        <div class="frame-box"><span>3</span><span class="div"></span><span>8</span></div>
+        <div class="frame-icon">形</div>
+        <h3>投球フォーム基礎</h3>
+        <p>アプローチのステップ、スイング、リリースのポイントをメモ。</p>
+      </div>
+      <div class="frame-card">
+        <div class="frame-box"><span>5</span><span class="div"></span><span>-</span></div>
+        <div class="frame-icon">油</div>
+        <h3>レーンとオイルパターン</h3>
+        <p>オイルの塗布パターンがボールの曲がり方に与える影響について。</p>
+      </div>
+      <div class="frame-card">
+        <div class="frame-box"><span>6</span><span class="div"></span><span>/</span></div>
+        <div class="frame-icon">語</div>
+        <h3>専門用語集</h3>
+        <p>ポケット、キングピン、ターキーなど、覚えておきたい用語まとめ。</p>
+      </div>
+      <div class="frame-card">
+        <div class="frame-box"><span>10</span><span class="div"></span><span>X</span></div>
+        <div class="frame-icon">具</div>
+        <h3>マイボール選びの基礎</h3>
+        <p>重さ・穴の位置・素材など、これから調べていきたいテーマ。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="blog-preview">
+  <div class="section-inner">
+    <div class="section-head">
+      <div>
+        <span class="section-label">DIARY</span>
+        <h2 class="section-title">最近の日記</h2>
+      </div>
+      <p class="section-desc">練習や学習の記録は日記ページに残していきます。</p>
+    </div>
+
+    <div class="diary-list">
+      <p class="diary-empty">まだ日記はありません。最初の投稿をお楽しみに。</p>
+    </div>
+    <a href="blog.html" class="link-more">日記ページへ <span>→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <ul class="footer-nav">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="blog.html">日記</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <span class="footer-small mono">© ピンの音 — Bowling Study Notes</span>
+  </div>
+</footer>
+
+</body>
+</html>
